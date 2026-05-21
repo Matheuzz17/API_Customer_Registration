@@ -1,5 +1,5 @@
-import { hash } from "crypto";
-import { UerRepository } from "../repositories/UserRepository";
+import { hash } from "bcrypt";
+import { UserRepository } from "../repositories/UserRepository";
 import { Injectable } from "@nestjs/common";
 import { User } from "../entides/User";
 interface CreateUserRequest{
@@ -11,7 +11,7 @@ interface CreateUserRequest{
 
 @Injectable()
 export class CreateUserUseCase{
-    constructor(private userRepository: UerRepository ){}
+    constructor(private userRepository: UserRepository ){}
 
     async execute({email, name, password, phone}){
         const user = new User({
@@ -20,6 +20,7 @@ export class CreateUserUseCase{
             password: await hash(password,10),
             phone,
         });
-        this.userRepository.create(user)
+        await this.userRepository.create(user)
+        return user;
     }
 }

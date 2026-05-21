@@ -1,7 +1,7 @@
 import { User } from "../entides/User";
 
 
-export abstract class UerRepository {
+export abstract class UserRepository {
     abstract create(user: User):Promise<void>
         
     }
