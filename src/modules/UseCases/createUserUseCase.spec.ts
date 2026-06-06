@@ -12,24 +12,22 @@ describe('Create User', () => {
   });
 
   it('Should be able to create user', async () => {
-    expect(userRepositoryInMemory.users).toEqual([]);
-
-    const user = await createUserUseCase.execute({
-      email: 'email@email.com',
-      name: 'Vitor',
-      password: '123123',
-      phone: '982235698'
-        });
-
-    expect(userRepositoryInMemory.users).toEqual([user]);
+  const user = await createUserUseCase.execute({
+    email: 'email@email.com',
+    name: 'gabriel',
+    password: '231254',
+    phone: '982235698',
   });
+  const foundUser = await userRepositoryInMemory.findByEmail('email@email.com');
+  expect(foundUser).toEqual(user);
+});
 
   it('Should be able to create user with password encrypted', async () => {
     const userPasswordWithoutEncryption = '123123';
 
     const user = await createUserUseCase.execute({
       email: 'email@email.com',
-      name: 'Vitor',
+      name: 'gabriel',
       password: userPasswordWithoutEncryption,
       phone: '982235698',
     });
