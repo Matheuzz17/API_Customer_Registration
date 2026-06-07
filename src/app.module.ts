@@ -4,6 +4,7 @@ import { UserModule } from './infra/http/modules/user/user.module';
 import { DatabaseModule } from './infra/dataBase/prisma/database.module';
 import { AuthModule } from './infra/http/modules/auth/auth.module';
 import { AddressModule } from './infra/http/modules/address/address.module';
+import { ClientsModule } from './clients/clients_module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AddressModule } from './infra/http/modules/address/address.module';
     UserModule,
     AuthModule,
     AddressModule,
+    ClientsModule,
   ],
   controllers: [],
   providers: [],

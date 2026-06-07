@@ -8,7 +8,7 @@ import { UpdateUserUseCase } from "../../../../modules/UseCases/UseCaseUpdateUse
 import { DeleteUserUseCase } from "../../../../modules/UseCases/UseCaseDeleteUser";
 import { DatabaseModule } from "../../../dataBase/prisma/database.module";
 import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
-import { ExchangeService } from "../../../../modules/exchange/exchange.Service";
+import { ExchangeService } from "../../../../modules/exchange/exchange.service";
 @Module({
   imports: [DatabaseModule],
   controllers: [UserCotroller],

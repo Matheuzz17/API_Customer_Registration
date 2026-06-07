@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../repositories/UserRepository";
-import { ExchangeService } from "../exchange/exchange.Service";
+import { ExchangeService } from "../exchange/exchange.service";
 
 @Injectable()
 export class FindAllUserUseCase {

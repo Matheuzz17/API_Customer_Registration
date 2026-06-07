@@ -1,102 +1,311 @@
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API de Cadastro de Clientes
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para gerenciamento de clientes, desenvolvida com NestJS e TypeScript, seguindo os princípios de Clean Architecture e SOLID.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Tecnologias Utilizadas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [NestJS](https://nestjs.com/) — framework Node.js para construção de aplicações server-side
+- [TypeScript](https://www.typescriptlang.org/) — superset tipado do JavaScript
+- [Prisma ORM](https://www.prisma.io/) — ORM para integração com banco de dados
+- [MySQL](https://www.mysql.com/) — banco de dados relacional
+- [JWT (JSON Web Token)](https://jwt.io/) — autenticação stateless
+- [Passport.js](https://www.passportjs.org/) — middleware de autenticação
+- [class-validator](https://github.com/typestack/class-validator) — validação de DTOs
+- [dotenv](https://github.com/motdotla/dotenv) — gerenciamento de variáveis de ambiente
 
-## Project setup
+---
 
-```bash
-$ npm install
+## Estrutura do Projeto
+
+```
+src/
+├── clients/                        # Módulo de paginação de clientes
+│   ├── clients_controller.ts
+│   ├── clients_service.ts
+│   └── clients_module.ts
+│
+├── infra/
+│   ├── dataBase/
+│   │   ├── mappers/                # Mapeamento entre entidades e modelos do Prisma
+│   │   │   ├── prismaAddressMappers.ts
+│   │   │   └── prismaUserMappers.ts
+│   │   └── prisma/
+│   │       └── repositories/      # Implementações dos repositórios
+│   │           ├── prisma.service.ts
+│   │           ├── prismaAddressRepository.ts
+│   │           ├── prismaUserRepository.ts
+│   │           └── database.module.ts
+│   │
+│   └── http/
+│       └── modules/
+│           ├── address/            # Módulo de endereços
+│           │   ├── dtos/
+│           │   │   └── creaateAddressBody.ts
+│           │   ├── address.controller.ts
+│           │   └── address.module.ts
+│           ├── auth/               # Módulo de autenticação
+│           │   ├── dtos/
+│           │   │   └── SinginBody.ts
+│           │   ├── guards/
+│           │   │   ├── jwtAuthGuard.ts
+│           │   │   └── localAuthGuard.ts
+│           │   ├── middleware/
+│           │   │   └── singInDTOValidate.middleware.ts
+│           │   ├── models/
+│           │   │   ├── authRequestModel.ts
+│           │   │   └── UserPayload.ts
+│           │   ├── auth.controller.ts
+│           │   └── auth.module.ts
+│           └── user/               # Módulo de usuários
+│               ├── dtos/
+│               │   ├── createUserBody.ts
+│               │   └── updateUserBody.ts
+│               ├── user.controler.ts
+│               └── user.module.ts
+│
+└── modules/
+    ├── auth/
+    │   └── strategies/
+    │       ├── jwt.strategy.ts
+    │       └── local.strategy.ts
+    ├── entides/                    # Entidades do domínio
+    │   ├── Address.ts
+    │   └── User.ts
+    ├── exchange/                   # Integração com API externa de câmbio
+    │   └── exchange.service.ts
+    ├── repositories/               # Interfaces dos repositórios
+    │   ├── AddressRepository.ts
+    │   ├── AddressRepositoryInMemory.ts
+    │   ├── UserRepository.ts
+    │   └── UserRepositoryInMemory.ts
+    ├── UseCases/                   # Casos de uso (regras de negócio)
+    │   ├── UseCaseCreateAddress.ts
+    │   ├── UseCaseCreateUser.ts
+    │   ├── UseCaseDeleteUser.ts
+    │   ├── UseCaseFindAllUser.ts
+    │   ├── UseCaseFindUserByEmail.ts
+    │   ├── UseCaseFindUserByName.ts
+    │   └── UseCaseUpdateUser.ts
+    └── user/
+        └── factories/
+            └── userFactory.ts
 ```
 
-## Compile and run the project
+---
+
+## Pré-requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+- [Node.js](https://nodejs.org/) v18 ou superior
+- [MySQL](https://www.mysql.com/) rodando localmente
+- [npm](https://www.npmjs.com/)
+
+---
+
+## Instalação
+
+1. Clone o repositório:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
 ```
 
-## Run tests
+2. Instale as dependências:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+3. Configure as variáveis de ambiente criando um arquivo `.env` na raiz do projeto:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```env
+DATABASE_URL="mysql://root:sua_senha@localhost:3306/cadastro_cliente"
+JWT_SECRET=sua_chave_secreta
+```
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+4. Crie o banco de dados no MySQL:
+
+```sql
+CREATE DATABASE cadastro_cliente;
+```
+
+5. Execute as migrations do Prisma:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate dev --name init
+npx prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Execução
 
-Check out a few resources that may come in handy when working with NestJS:
+### Desenvolvimento
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run start:dev
+```
 
-## Support
+### Produção
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run build
+npm run start:prod
+```
 
-## Stay in touch
+A API estará disponível em `http://localhost:3000`.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## Documentação das Rotas
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-=======
-# Projeto-Beck-end
+### Autenticação
 
+| Método | Rota      | Descrição              | Auth |
+|--------|-----------|------------------------|------|
+| POST   | `/singIn` | Login e geração de JWT | Não  |
+
+**Body:**
+```json
+{
+  "email": "maria@email.com",
+  "password": "senha123"
+}
+```
+
+**Resposta:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+### Clientes
+
+> Todas as rotas de clientes requerem autenticação JWT.  
+> Adicione o header: `Authorization: Bearer {token}`
+
+| Método | Rota                    | Descrição                     |
+|--------|-------------------------|-------------------------------|
+| POST   | `/Clientes`             | Cadastrar novo cliente        |
+| GET    | `/Clientes`             | Listar todos os clientes      |
+| GET    | `/Clientes/name/:name`  | Buscar clientes por nome      |
+| GET    | `/Clientes/email/:email`| Buscar cliente por email      |
+| PUT    | `/Clientes/:id`         | Atualizar dados do cliente    |
+| DELETE | `/Clientes/:id`         | Remover cliente               |
+
+#### POST `/Clientes` — Cadastrar cliente
+
+**Body:**
+```json
+{
+  "name": "Maria Silva",
+  "email": "maria@email.com",
+  "password": "senha123",
+  "phone": "999999999"
+}
+```
+
+#### GET `/Clientes` — Listar todos os clientes
+
+Suporta paginação via query params:
+
+```
+GET /clients?page=1&limit=10
+```
+
+**Resposta:**
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Maria Silva",
+      "email": "maria@email.com",
+      "phone": "999999999"
+    }
+  ],
+  "meta": {
+    "total": 50,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 5
+  }
+}
+```
+
+#### GET `/Clientes/name/:name` — Buscar por nome
+
+```
+GET /Clientes/name/Maria
+```
+
+#### GET `/Clientes/email/:email` — Buscar por email
+
+```
+GET /Clientes/email/maria@email.com
+```
+
+#### PUT `/Clientes/:id` — Atualizar cliente
+
+**Body:**
+```json
+{
+  "name": "Maria Souza",
+  "phone": "988888888"
+}
+```
+
+#### DELETE `/Clientes/:id` — Remover cliente
+
+```
+DELETE /Clientes/uuid-do-cliente
+```
+
+---
+
+### Endereços
+
+| Método | Rota                              | Descrição                      | Auth |
+|--------|-----------------------------------|--------------------------------|------|
+| POST   | `/clients/:clientId/addresses`    | Cadastrar endereço do cliente  | Sim  |
+
+**Body:**
+```json
+{
+  "street": "Rua das Flores",
+  "number": "123",
+  "district": "Centro",
+  "city": "João Pessoa",
+  "state": "PB",
+  "zipCode": "58000-000"
+}
+```
+
+---
+
+## Arquitetura
+
+O projeto segue os princípios de **Clean Architecture**, dividida em três camadas:
+
+**Camada de Negócio** — contém as entidades (`User`, `Address`), interfaces dos repositórios e os casos de uso com as regras de negócio, sem dependência de frameworks externos.
+
+**Camada de Dados** — contém as implementações dos repositórios com Prisma, mappers para conversão entre entidades e modelos do banco, e a integração com a API externa de câmbio.
+
+**Camada de Aplicação** — contém os controllers REST, DTOs de entrada e saída, guards de autenticação e validações de request.
+
+---
+
+## Variáveis de Ambiente
+
+| Variável       | Descrição                        | Exemplo                                              |
+|----------------|----------------------------------|------------------------------------------------------|
+| `DATABASE_URL` | URL de conexão com o MySQL       | `mysql://root:senha@localhost:3306/cadastro_cliente` |
+| `JWT_SECRET`   | Chave secreta para geração do JWT| `minha_chave_secreta`                                |
