@@ -6,14 +6,11 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class UseCreateUserBody {
+export class SingInBody {
+  @IsNotEmpty()
   @IsString()
   @IsEmail()
   email!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
 
   @IsString()
   @IsNotEmpty()

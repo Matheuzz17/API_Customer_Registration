@@ -19,7 +19,7 @@ describe('Create User', () => {
       name: 'Vitor',
       password: '123123',
       phone: '982235698'
-    });
+        });
 
     expect(userRepositoryInMemory.users).toEqual([user]);
   });
