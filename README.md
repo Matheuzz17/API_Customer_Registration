@@ -309,3 +309,6 @@ O projeto segue os princípios de **Clean Architecture**, dividida em três cama
 |----------------|----------------------------------|------------------------------------------------------|
 | `DATABASE_URL` | URL de conexão com o MySQL       | `mysql://root:senha@localhost:3306/cadastro_cliente` |
 | `JWT_SECRET`   | Chave secreta para geração do JWT| `minha_chave_secreta`                                |
+
+
+Alunos: Ruan Thoamaz 01814470, Pedro David 01823976, Matheus Gomes da Silva 01812898
