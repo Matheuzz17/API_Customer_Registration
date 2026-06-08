@@ -7,7 +7,6 @@ import { FindUserByEmailUseCase } from "../../../../modules/UseCases/UseCaseFind
 import { UpdateUserUseCase } from "../../../../modules/UseCases/UseCaseUpdateUser";
 import { DeleteUserUseCase } from "../../../../modules/UseCases/UseCaseDeleteUser";
 import { DatabaseModule } from "../../../dataBase/prisma/database.module";
-import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 import { ExchangeService } from "../../../../modules/exchange/exchange.service";
 @Module({
   imports: [DatabaseModule],

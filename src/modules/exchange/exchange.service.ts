@@ -3,9 +3,12 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ExchangeService {
   async getExchangeRate() {
+      try {
     const response = await fetch(
       'https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,JPY-BRL,CHF-BRL,BTC-BRL',
     );
+    if (!response.ok) throw new Error('API externa indisponível');
+
     const data = await response.json();
 
     return {
@@ -15,5 +18,15 @@ export class ExchangeService {
       Iene: data.JPYBRL.bid,
       FrancoSuico: data.CHFBRL.bid,
     };
+  } catch {
+    return {
+      Dolar: null,
+      Euro: null,
+      Libra: null,
+      Iene: null,
+      FrancoSuico: null,
+      erro: 'Cotações temporariamente indisponíveis',
+    };
   }
+}
 }

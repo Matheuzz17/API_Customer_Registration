@@ -17,7 +17,4 @@ export class SingInBody {
   @MinLength(6)
   password!: string;
 
-  @IsString()
-  @IsPhoneNumber('BR')
-  phone!: string;
 }

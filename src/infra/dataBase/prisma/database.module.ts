@@ -17,6 +17,6 @@ import { PrismaAddressRepository } from "./repositories/prismaAddressRepository"
             useClass: PrismaAddressRepository,
         },
     ],
-    exports: [PrismaService,UserRepository, AddressRepository],
+    exports: [PrismaService, UserRepository, AddressRepository],
 })
 export class DatabaseModule{}

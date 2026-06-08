@@ -15,10 +15,12 @@ import { JwtStrategy } from '../../../../modules/auth/strategies/jwt.strategy';
   imports: [
     DatabaseModule,
     UserModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '130 days' },
-    }),
+JwtModule.registerAsync({
+  useFactory: () => ({
+    secret: process.env.JWT_SECRET,
+    signOptions: { expiresIn: '1h' },
+  }),
+}),
   ],
 
   providers: [LocalStrategy, JwtStrategy, ValidateUserUseCase, SingInUseCase],

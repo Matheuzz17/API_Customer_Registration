@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Put, Delete, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Delete, Param, UseGuards } from '@nestjs/common';
 import { CreateUserUseCase } from '../../../../modules/UseCases/UseCaseCreateUser';
 import { FindAllUserUseCase } from '../../../../modules/UseCases/UseCaseFindAllUser';
 import { FindUserByNameUseCase } from '../../../../modules/UseCases/UseCaseFindUserByName';
@@ -7,6 +7,7 @@ import { UpdateUserUseCase } from '../../../../modules/UseCases/UseCaseUpdateUse
 import { DeleteUserUseCase } from '../../../../modules/UseCases/UseCaseDeleteUser';
 import { UseCreateUserBody } from './dtos/createUserBody';
 import { UpdateUserBody } from './dtos/updateUserBody';
+import { JwtAuthGuard } from '../auth/guards/jwtAuthGuard';
 
 @Controller('Clientes')
 export class UserCotroller {
@@ -22,49 +23,36 @@ export class UserCotroller {
   @Post()
   async createPost(@Body() body: UseCreateUserBody) {
     const { email, name, password, phone } = body;
-    const user = await this.createUserUseCase.execute({
-      email,
-      name,
-      password,
-      phone,
-    });
-    return user;
+    return await this.createUserUseCase.execute({ email, name, password, phone });
   }
 
-
-   @Get()
+  @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll() {
     return await this.findAllUsersUseCase.execute();
   }
 
-
   @Get('name/:name')
+  @UseGuards(JwtAuthGuard)
   async findByName(@Param('name') name: string) {
     return await this.findUserByNameUseCase.execute({ name });
   }
 
-
-
   @Get('email/:email')
+  @UseGuards(JwtAuthGuard)
   async findByEmail(@Param('email') email: string) {
     return await this.findUserByEmailUseCase.execute({ email });
   }
 
-
-
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   async update(@Param('id') id: string, @Body() body: UpdateUserBody) {
     const { name, email, phone } = body;
-    return await this.updateUserUseCase.execute({
-    id,
-    name,
-    email, 
-    phone });
+    return await this.updateUserUseCase.execute({ id, name, email, phone });
   }
 
-
-
-@Delete(':id')
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async delete(@Param('id') id: string) {
     return await this.deleteUserUseCase.execute({ id });
   }

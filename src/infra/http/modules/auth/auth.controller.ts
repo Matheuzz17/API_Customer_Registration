@@ -24,9 +24,4 @@ export class AuthController {
     });
     return { acess_token };
   }
-  @Get('test')
-  @UseGuards()
-  async teste() {
-    return 'teste';
-  }
 }

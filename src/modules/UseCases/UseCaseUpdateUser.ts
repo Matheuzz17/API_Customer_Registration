@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException } from "@nestjs/common";
+import { Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../repositories/UserRepository";
 interface UpdateUserRequest{
     id: string;
@@ -12,7 +12,7 @@ export class UpdateUserUseCase{
     async execute({id, name, email,phone}:UpdateUserRequest){
     const user = await this.userRepository.findById(id);
     if (!user)
-        throw new NotAcceptableException('Usuário nao encontrado');
+        throw new NotFoundException('Usuário nao encontrado');
 
     if(name)
         user.name = name;

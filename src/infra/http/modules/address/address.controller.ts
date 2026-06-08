@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { CreateAddressUseCase } from '../../../../modules/UseCases/UseCaseCreateAddress';
 import { CreateAddressBody } from './dtos/creaateAddressBody';
 import { JwtAuthGuard} from '../auth/guards/jwtAuthGuard';
@@ -9,7 +9,7 @@ export class AddressController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Param('userId') userId: string, @Body() body: CreateAddressBody) {
+  async create(@Param('clientId') userId: string, @Body() body: CreateAddressBody) {
     const { street, number, district, city, state, zipCode } = body;
     const address = await this.createAddressUseCase.execute({
       street,
