@@ -1,7 +1,8 @@
 import { hash } from 'bcrypt';
 import { UserRepository } from '../repositories/UserRepository';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '../entides/User';
+
 interface CreateUserRequest {
   email: string;
   name: string;
@@ -13,15 +14,13 @@ interface CreateUserRequest {
 export class CreateUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
-  async execute({
-    email,
+  async execute({ email, name, password, phone }: CreateUserRequest) {
+    const alreadyExists = await this.userRepository.findByEmail(email);
 
-    name,
+    if (alreadyExists) {
+      throw new ConflictException('Já existe um usuário cadastrado com esse e-mail');
+    }
 
-    password,
-
-    phone,
-  }: CreateUserRequest) {
     const user = new User({
       email,
       name,

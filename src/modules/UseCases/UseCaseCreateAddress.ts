@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AddressRepository } from '../repositories/AddressRepository';
+import { UserRepository } from '../repositories/UserRepository';
 import { Address } from '../entides/Address';
 
 interface CreateAddressRequest {
@@ -14,11 +15,19 @@ interface CreateAddressRequest {
 
 @Injectable()
 export class CreateAddressUseCase {
-  constructor(private addressRepository: AddressRepository) {}
+  constructor(
+    private addressRepository: AddressRepository,
+    private userRepository: UserRepository,
+  ) {}
 
   async execute(data: CreateAddressRequest): Promise<Address> {
-    const address = new Address(data);
+    const userExists = await this.userRepository.findById(data.userId);
 
+    if (!userExists) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    const address = new Address(data);
     await this.addressRepository.create(address);
 
     return address;
